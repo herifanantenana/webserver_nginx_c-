@@ -1,0 +1,11 @@
+obj/
+webserver.exe
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.bmp
+*.svg
+*.csv
+*.txt
+*.pdf
