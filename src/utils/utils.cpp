@@ -48,7 +48,7 @@ namespace utils
 	{
 		size_t start = str.find_first_not_of(chars);
 		size_t end = str.find_last_not_of(chars);
-		if (start == std::string::npos || end == std::string::npos)
+		if (start == std::string::npos && end == std::string::npos)
 			str.clear();
 		else
 			str = str.substr(start, end - start + 1);
@@ -56,7 +56,6 @@ namespace utils
 
 	bool startsWith(const std::string &str, const std::string &prefix, const std::string &after)
 	{
-
 		if (after.empty())
 		{
 			return str.compare(0, prefix.length(), prefix) == 0;

@@ -110,7 +110,7 @@ namespace config
 			if (tokens.empty())
 				continue;
 			if (tokens.size() < 2)
-				EXCEPTION("Excepted arguments for directive: %s", tokens[0].c_str());
+				EXCEPTION("Expected arguments for directive: %s", tokens[0].c_str());
 
 			const std::string directive = tokens.front();
 			if (directive == LISTEN_DIRECTIVE)
