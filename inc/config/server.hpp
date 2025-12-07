@@ -10,7 +10,9 @@ namespace config
 	class ServerConfig
 	{
 	private:
-		std::vector<std::pair<std::string, int>> _hostPorts;
+		typedef std::pair<std::string, int> HostPort;
+
+		std::vector<HostPort> _hostPorts;
 		std::string _rootPath;
 		std::map<int, std::string> _errorPages;
 		size_t _clientMaxBodySize;

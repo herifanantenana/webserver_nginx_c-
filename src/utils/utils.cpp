@@ -3,6 +3,7 @@
 #include <sstream>
 #include <sys/stat.h>
 #include <unistd.h>
+#include "utils/logger.hpp"
 
 namespace utils
 {
@@ -43,11 +44,14 @@ namespace utils
 		return (access(path.c_str(), X_OK) == 0);
 	}
 
-	std::string trimChars(const std::string &str, const std::string &chars)
+	void trimChars(std::string &str, const std::string &chars)
 	{
 		size_t start = str.find_first_not_of(chars);
 		size_t end = str.find_last_not_of(chars);
-		return (start == std::string::npos || end == std::string::npos) ? "" : str.substr(start, end - start + 1);
+		if (start == std::string::npos || end == std::string::npos)
+			str.clear();
+		else
+			str = str.substr(start, end - start + 1);
 	}
 
 	bool startWith(const std::string &str, const std::string &prefix, const std::string &after)
@@ -61,11 +65,10 @@ namespace utils
 		return false;
 	}
 
-	std::string removeExtraChar(const std::string &str, const char ch)
+	void removeExtraChar(std::string &str, const char ch)
 	{
-		if (!str.empty() && str.at(str.length() - 1) == ch)
-			return str.substr(0, str.length() - 1);
-		return str;
+		while (!str.empty() && str.at(str.length() - 1) == ch)
+			str.erase(str.length() - 1);
 	}
 
 	std::vector<std::string> splitString(const std::string &str, const char &del)

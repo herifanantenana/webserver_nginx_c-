@@ -8,12 +8,14 @@ namespace config
 	class LocationConfig
 	{
 	private:
+		typedef std::pair<std::string, std::string> CgiMapping;
+
 		std::string _aliasPath;
 		std::string _rootPath;
 		bool _autoIndex;
 		std::vector<std::string> _indexFiles;
 		std::vector<std::string> _allowedMethods;
-		std::vector<std::pair<std::string, std::string>> _cgiMappings;
+		std::vector<CgiMapping> _cgiMappings;
 		std::vector<std::string> _uploadPaths;
 		std::pair<int, std::string> _redirect;
 
