@@ -22,5 +22,7 @@ namespace config
 		~ParserConfig();
 
 		void parseConfigFile();
+
+		void setup();
 	};
 } // namespace config
