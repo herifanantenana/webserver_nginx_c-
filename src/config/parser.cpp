@@ -41,7 +41,7 @@ namespace config
 			if (tokens.empty())
 				continue;
 			if (tokens.size() < 2)
-				EXCEPTION("Excepted arguments for directive: %s", tokens[0].c_str());
+				EXCEPTION("Expected arguments for directive: %s", tokens[0].c_str());
 
 			const std::string directive = tokens.front();
 			if (directive == ROOT_DIRECTIVE)
@@ -139,7 +139,7 @@ namespace config
 			{
 				size_t multiplier = 1;
 				std::string sizeStr = tokens[1];
-				size_t lastChar = sizeStr.at(sizeStr.size() - 1);
+				char lastChar = sizeStr.at(sizeStr.size() - 1);
 				if (lastChar == 'K' || lastChar == 'k')
 					multiplier = 1024;
 				else if (lastChar == 'M' || lastChar == 'm')
@@ -185,7 +185,7 @@ namespace config
 			if (cleanUpAndContinue(line))
 				continue;
 
-			if (utils::startWith(line, SERVER_DIRECTIVE, " \t{"))
+			if (utils::startsWith(line, SERVER_DIRECTIVE, " \t{"))
 			{
 				if (line.find('{') == std::string::npos)
 					EXCEPTION("Expected '{' after server directive");

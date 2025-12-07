@@ -54,15 +54,22 @@ namespace utils
 			str = str.substr(start, end - start + 1);
 	}
 
-	bool startWith(const std::string &str, const std::string &prefix, const std::string &after)
+	bool startsWith(const std::string &str, const std::string &prefix, const std::string &after)
 	{
-		if (str.length() < prefix.length())
+
+		if (after.empty())
+		{
+			return str.compare(0, prefix.length(), prefix) == 0;
+		}
+		else
+		{
+			if (str.compare(0, prefix.length(), prefix) != 0)
+				return false;
+			size_t pos = prefix.length();
+			if (str.length() > pos && after.find(str.at(pos)) != std::string::npos)
+				return true;
 			return false;
-		if (str.compare(0, prefix.length(), prefix) != 0)
-			return false;
-		if (!after.empty() && str.at(prefix.length()) && after.find(str.at(prefix.length())) != std::string::npos)
-			return true;
-		return false;
+		}
 	}
 
 	void removeExtraChar(std::string &str, const char ch)
