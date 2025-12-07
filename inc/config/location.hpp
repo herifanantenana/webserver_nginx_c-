@@ -31,5 +31,7 @@ namespace config
 		inline void addCgiMapping(const std::string &extension, const std::string &script) { _cgiMappings.push_back(std::make_pair(extension, script)); }
 		inline void addUploadPath(const std::string &path) { _uploadPaths.push_back(path); }
 		inline void setRedirect(int code, const std::string &url) { _redirect = std::make_pair(code, url); }
+
+		void setup(const std::string &serverRootPath);
 	};
 } // namespace config

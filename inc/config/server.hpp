@@ -27,5 +27,7 @@ namespace config
 		inline void addErrorPage(int code, const std::string &path) { _errorPages[code] = path; }
 		inline void setClientMaxBodySize(size_t size) { _clientMaxBodySize = size; }
 		inline void addLocation(const LocationConfig &location) { _locations.push_back(location); }
+
+		void setup();
 	};
 } // namespace config

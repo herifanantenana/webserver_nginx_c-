@@ -11,6 +11,7 @@ int main(int argc, char const *argv[])
 	{
 		config::ParserConfig parserConfig(argv[1]);
 		parserConfig.parseConfigFile();
+		parserConfig.setup();
 	}
 	catch (const std::exception &e)
 	{

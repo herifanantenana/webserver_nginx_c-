@@ -196,4 +196,12 @@ namespace config
 			}
 		}
 	}
+
+	void ParserConfig::setup()
+	{
+		if (_servers.empty())
+			EXCEPTION("No server blocks found in configuration");
+		for (std::vector<ServerConfig>::iterator it = _servers.begin(); it != _servers.end(); ++it)
+			it->setup();
+	}
 } // namespace config
