@@ -21,8 +21,9 @@ namespace config
 		ParserConfig(const std::string &configFilePath);
 		~ParserConfig();
 
-		void parseConfigFile();
+		inline std::vector<ServerConfig> getServer() const { return _servers; }
 
+		void parseConfigFile();
 		void setup();
 	};
 } // namespace config
