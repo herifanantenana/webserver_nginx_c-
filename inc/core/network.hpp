@@ -21,8 +21,18 @@ namespace core
 		Network();
 		~Network();
 
+		void setupServer();
+		void synchronizePollFds();
+		void handlePollEvents(int eventCount);
+
 	public:
 		static Network *getInstance();
 		static void destroyInstance();
+
+		void init(std::vector<config::ServerConfig> serverConfigs);
+		void run();
+
+		void registerConnection(connection::Connection *connection);
+		void unregisterConnection(connection::Connection *connection);
 	};
 } // namespace network

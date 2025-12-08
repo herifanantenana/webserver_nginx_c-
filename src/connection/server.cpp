@@ -47,4 +47,9 @@ namespace connection
 	ServerSocket::~ServerSocket()
 	{
 	}
+
+	bool connection::ServerSocket::shouldClose() const
+	{
+		return false;
+	}
 } // namespace connection

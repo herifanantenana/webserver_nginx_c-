@@ -9,9 +9,10 @@ namespace config
 {
 	class ServerConfig
 	{
-	private:
+	public:
 		typedef std::pair<std::string, int> HostPort;
 
+	private:
 		std::vector<HostPort> _hostPorts;
 		std::string _rootPath;
 		std::map<int, std::string> _errorPages;
@@ -28,6 +29,7 @@ namespace config
 		inline void setClientMaxBodySize(size_t size) { _clientMaxBodySize = size; }
 		inline void addLocation(const LocationConfig &location) { _locations.push_back(location); }
 
+		inline const std::vector<HostPort> &getHostPort() const { return _hostPorts; }
 		void setup();
 	};
 } // namespace config

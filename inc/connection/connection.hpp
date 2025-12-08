@@ -28,5 +28,9 @@ namespace connection
 		inline void updateActivity() { _lastActivity = std::time(NULL); }
 
 		inline const int &getFd() const { return _fd; }
+		inline const ConnectionType &getType() const { return _type; }
+		inline const short &getPollEvents() const { return _pollEvents; }
+
+		virtual bool shouldClose() const = 0;
 	};
 } // namespace connection

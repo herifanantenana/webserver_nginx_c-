@@ -17,5 +17,7 @@ namespace connection
 	public:
 		ServerSocket(const int port, const std::string &host, const config::ServerConfig &serverConfig);
 		virtual ~ServerSocket();
+
+		virtual bool shouldClose() const;
 	};
 } // namespace connection

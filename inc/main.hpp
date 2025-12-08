@@ -13,4 +13,6 @@
 #include "connection/server.hpp"
 #include "connection/client.hpp"
 
+#include "core/network.hpp"
+
 #include <cstdlib>
