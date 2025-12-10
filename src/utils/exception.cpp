@@ -29,7 +29,7 @@ namespace utils
 		if (customException)
 			customException->log();
 		else
-			Logger::log(Logger::FATAL, file, function, line, "Unhandled exception: %s", exception.what());
+			Logger::log(Logger::ERROR, file, function, line, "Unhandled exception: %s", exception.what());
 	}
 
 	const char *Exception::what() const throw()

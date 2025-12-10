@@ -14,7 +14,7 @@ namespace conn
 		if (_fd >= 0)
 		{
 			if (close(_fd) < 0)
-				LOG_WARNING("Setting an invalid fd: %d", _fd);
+				LOG_WARNING("Failed to close file descriptor: %d", _fd);
 		}
 	}
 } // namespace conn

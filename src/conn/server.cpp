@@ -11,7 +11,7 @@ namespace conn
 {
 	ServerSocket::ServerSocket(const int port, const std::string &host, const config::ServerConfig &serverConfig) : Connection(-1, Connection::SERVER_SOCKET), _port(port), _host(host), _serverConfig(serverConfig)
 	{
-		if (_port <= 0 || _port >= 65535)
+		if (_port <= 0 || _port > 65535)
 			EXCEPTION("Invalid port number: %d", _port);
 
 		std::memset(&_address, 0, sizeof(_address));

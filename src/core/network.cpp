@@ -130,7 +130,7 @@ namespace core
 		_serverConfigs = serverConfigs;
 	}
 
-	void core::Network::run()
+	void Network::run()
 	{
 		LOG_INFO("Starting network event loop...");
 		setupServerSocket();
