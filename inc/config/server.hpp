@@ -29,7 +29,7 @@ namespace config
 		inline void setClientMaxBodySize(size_t size) { _clientMaxBodySize = size; }
 		inline void addLocation(const LocationConfig &location) { _locations.push_back(location); }
 
-		inline const std::vector<HostPort> &getHostPort() const { return _hostPorts; }
+		inline const std::vector<HostPort> &getHostPorts() const { return _hostPorts; }
 		void setup();
 		void printConfig() const;
 	};

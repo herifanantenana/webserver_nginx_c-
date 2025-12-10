@@ -17,7 +17,7 @@ namespace config
 	void LocationConfig::setup(const std::string &serverRootPath)
 	{
 		if (_aliasPath.empty() || _aliasPath.at(0) != '/')
-			EXCEPTION("Invalid URI path fork location: %s", _aliasPath.c_str());
+			EXCEPTION("Invalid URI path for location: %s", _aliasPath.c_str());
 
 		if (_rootPath.empty())
 			_rootPath = serverRootPath;
