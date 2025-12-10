@@ -5,7 +5,6 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <poll.h>
-#include <sstream>
 
 namespace utils
 {
@@ -103,7 +102,7 @@ namespace utils
 		return path1 + path2;
 	}
 
-	std::string getEventsName(const short events)
+	std::string getEventNames(const short events)
 	{
 		std::ostringstream oss;
 		if (events & POLLIN)

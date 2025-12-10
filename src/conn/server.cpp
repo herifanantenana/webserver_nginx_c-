@@ -52,7 +52,7 @@ namespace conn
 
 	void ServerSocket::handleEvents(const short events)
 	{
-		LOG_DEBUG("ServerSocket fd: %d handleEvents called with events: %s", getFd(), utils::getEventsName(events).c_str());
+		LOG_DEBUG("ServerSocket fd: %d handleEvents called with events: %s", getFd(), utils::getEventNames(events).c_str());
 		if (events & POLLIN)
 		{
 		}

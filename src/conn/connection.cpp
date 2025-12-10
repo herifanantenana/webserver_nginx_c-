@@ -18,7 +18,7 @@ namespace conn
 		}
 	}
 
-	bool Connection::isTimeOuted(const int timeoutSeconds) const
+	bool Connection::isTimedOut(const int timeoutSeconds) const
 	{
 		if (_lastActivity == 0)
 			return false;

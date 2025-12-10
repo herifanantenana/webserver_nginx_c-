@@ -16,7 +16,7 @@ namespace conn
 
 	void ClientSocket::handleEvents(const short events)
 	{
-		LOG_DEBUG("ClientSocket fd: %d handleEvents called with events: %s", getFd(), utils::getEventsName(events).c_str());
+		LOG_DEBUG("ClientSocket fd: %d handleEvents called with events: %s", getFd(), utils::getEventNames(events).c_str());
 		if (events & POLLIN)
 		{
 		}

@@ -18,5 +18,5 @@ namespace utils
 	std::vector<std::string> splitString(const std::string &str, const char &del);
 	std::string buildPath(const std::string &path1, const std::string &path2);
 
-	std::string getEventsName(const short events);
+	std::string getEventNames(const short events);
 } // namespace utils

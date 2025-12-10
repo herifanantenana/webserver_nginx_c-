@@ -4,6 +4,7 @@
 #include "utils/exception.hpp"
 #include "conn/server.hpp"
 #include "conn/client.hpp"
+#include "conn/connection.hpp"
 #include <csignal>
 #include <cstring>
 
@@ -134,6 +135,7 @@ namespace core
 
 	void Network::synchronizePollFds()
 	{
+		std::vector<conn::Connection *> connectionsToClose;
 		for (std::vector<pollfd>::iterator it = _pollFds.begin(); it != _pollFds.end(); ++it)
 		{
 			const int fd = it->fd;
@@ -141,7 +143,7 @@ namespace core
 			if (connIt == _connections.end())
 			{
 				LOG_WARNING("Pollfd with fd %d has no associated connection. Skipping.", fd);
-				_pollFds.erase(it);
+				connectionsToClose.push_back(connIt->second);
 				continue;
 			}
 
@@ -162,6 +164,9 @@ namespace core
 
 			it->events = connIt->second->getPollEvents();
 		}
+
+		for (std::vector<conn::Connection *>::iterator it = connectionsToClose.begin(); it != connectionsToClose.end(); ++it)
+			unregisterConnection(*it);
 	}
 
 	void Network::cleanUpTimeOutClients()
@@ -175,7 +180,7 @@ namespace core
 				continue;
 
 			// !fix: check for timeout prepare response for timed out clients
-			if (connection->isTimeOuted(5))
+			if (connection->isTimedOut(TIMEOUT_CHECK_INTERVAL))
 				connectionsToClose.push_back(connection);
 		}
 
@@ -234,7 +239,7 @@ namespace core
 		{
 			synchronizePollFds();
 
-			int eventCount = poll(&_pollFds[0], _pollFds.size(), 0);
+			int eventCount = poll(&_pollFds[0], _pollFds.size(), 1000);
 			if (eventCount < 0)
 			{
 				if (errno == EINTR)

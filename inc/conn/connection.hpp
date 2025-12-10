@@ -2,6 +2,8 @@
 
 #include <ctime>
 
+#define TIMEOUT_CHECK_INTERVAL 10
+
 namespace conn
 {
 	class Connection
@@ -30,7 +32,7 @@ namespace conn
 		inline const ConnectionType &getType() const { return _type; }
 		inline const short &getPollEvents() const { return _pollEvents; }
 
-		bool isTimeOuted(const int timeoutSeconds) const;
+		bool isTimedOut(const int timeoutSeconds) const;
 
 		virtual bool shouldClose() const = 0;
 		virtual void handleEvents(const short events) = 0;
