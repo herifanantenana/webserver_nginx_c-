@@ -31,5 +31,6 @@ namespace core
 		static void destroyInstance();
 
 		void init(std::vector<config::ServerConfig> serverConfigs);
+		void run();
 	};
 } // namespace core

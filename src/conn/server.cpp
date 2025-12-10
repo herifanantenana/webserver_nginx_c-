@@ -42,7 +42,7 @@ namespace conn
 		if (listen(getFd(), SOMAXCONN) < 0)
 			EXCEPTION("Failed to listen on socket: %s", std::strerror(errno));
 
-		LOG_FATAL("Server listening on %s:%d", _host, _port);
+		LOG_INFO("Server listening on %s:%d", _host.c_str(), _port);
 	}
 
 	conn::ServerSocket::~ServerSocket()

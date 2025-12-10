@@ -117,4 +117,23 @@ namespace core
 		if (_connections.empty())
 			EXCEPTION("No server sockets were created. Check server configurations.");
 	}
+
+	void Network::init(std::vector<config::ServerConfig> serverConfigs)
+	{
+		LOG_DEBUG("Initializing network with server configurations...");
+		if (serverConfigs.empty())
+			EXCEPTION("No server configurations provided to initialize the network.");
+
+		signal(SIGINT, handleSignal);
+		signal(SIGTERM, handleSignal);
+
+		_serverConfigs = serverConfigs;
+	}
+
+	void core::Network::run()
+	{
+		LOG_INFO("Starting network event loop...");
+		setupServerSocket();
+		_isRunning = true;
+	}
 } // namespace core
