@@ -1,10 +1,11 @@
 #include "config/parser.hpp"
 
-#include <fstream>
-#include <cstdlib>
 #include "utils/exception.hpp"
 #include "utils/utils.hpp"
 #include "utils/logger.hpp"
+#include <fstream>
+#include <cstdlib>
+#include <iostream>
 
 namespace config
 {
@@ -203,5 +204,16 @@ namespace config
 			EXCEPTION("No server blocks found in configuration");
 		for (std::vector<ServerConfig>::iterator it = _servers.begin(); it != _servers.end(); ++it)
 			it->setup();
+	}
+
+	void ParserConfig::printConfig() const
+	{
+		std::cout << "Parsed Configuration:" << std::endl;
+		for (size_t i = 0; i < _servers.size(); ++i)
+		{
+			std::cout << "----------------------------------------" << std::endl;
+			std::cout << "Server " << i + 1 << ":" << std::endl;
+			_servers[i].printConfig();
+		}
 	}
 } // namespace config

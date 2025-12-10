@@ -2,6 +2,7 @@
 
 #include "utils/exception.hpp"
 #include "utils/utils.hpp"
+#include <iostream>
 
 namespace config
 {
@@ -39,5 +40,26 @@ namespace config
 			EXCEPTION("Server must have at least one location");
 		for (std::vector<LocationConfig>::iterator it = _locations.begin(); it != _locations.end(); ++it)
 			it->setup(_rootPath);
+	}
+
+	void config::ServerConfig::printConfig() const
+	{
+		std::cout << "Server Config:" << std::endl;
+
+		std::cout << "\tHost and Ports:" << std::endl;
+		for (std::vector<HostPort>::const_iterator it = _hostPorts.begin(); it != _hostPorts.end(); ++it)
+			std::cout << "\t\t- " << it->first << ":" << it->second << std::endl;
+
+		std::cout << "\tRoot Path: " << _rootPath << std::endl;
+
+		std::cout << "\tError Pages:" << std::endl;
+		for (std::map<int, std::string>::const_iterator it = _errorPages.begin(); it != _errorPages.end(); ++it)
+			std::cout << "\t\t- " << it->first << ": " << it->second << std::endl;
+
+		std::cout << "\tClient Max Body Size: " << _clientMaxBodySize << std::endl;
+
+		std::cout << "\tLocations:" << std::endl;
+		for (std::vector<LocationConfig>::const_iterator it = _locations.begin(); it != _locations.end(); ++it)
+			it->printConfig();
 	}
 } // namespace config

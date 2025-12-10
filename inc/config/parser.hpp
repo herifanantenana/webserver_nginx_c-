@@ -25,5 +25,6 @@ namespace config
 
 		void parseConfigFile();
 		void setup();
+		void printConfig() const;
 	};
 } // namespace config

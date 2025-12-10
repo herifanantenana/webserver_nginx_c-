@@ -12,12 +12,7 @@ int main(int argc, char const *argv[])
 		config::ParserConfig parserConfig(argv[1]);
 		parserConfig.parseConfigFile();
 		parserConfig.setup();
-		std::vector<config::ServerConfig> serverConfigs = parserConfig.getServer();
-
-		core::Network *network = core::Network::getInstance();
-		network->init(serverConfigs);
-		network->run();
-		core::Network::destroyInstance();
+		parserConfig.printConfig();
 	}
 	catch (const std::exception &e)
 	{
