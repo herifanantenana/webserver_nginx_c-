@@ -22,5 +22,12 @@ namespace conn
 	public:
 		Connection(const int fd, const ConnectionType type);
 		virtual ~Connection();
+
+		inline void setPollEvents(const short events) { _pollEvents = events; }
+		inline void setFd(const int fd) { _fd = fd; }
+
+		inline const int &getFd() const { return _fd; }
+
+		virtual bool shouldClose() const = 0;
 	};
 } // namespace conn
