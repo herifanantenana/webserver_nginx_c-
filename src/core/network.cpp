@@ -193,7 +193,8 @@ namespace core
 		std::vector<conn::Connection *> connectionsToClose;
 		for (std::vector<pollfd>::iterator it = _pollFds.begin(); it != _pollFds.end() && eventCount > 0; ++it)
 		{
-			if (it->revents == 0)
+			const short revents = it->revents;
+			if (revents == 0)
 				continue;
 
 			--eventCount;
@@ -205,7 +206,7 @@ namespace core
 
 			try
 			{
-				/* code */
+				connection->handleEvents(revents);
 				if (connection->shouldClose())
 					connectionsToClose.push_back(connection);
 			}
@@ -232,6 +233,7 @@ namespace core
 		while (_isRunning)
 		{
 			synchronizePollFds();
+
 			int eventCount = poll(&_pollFds[0], _pollFds.size(), 0);
 			if (eventCount < 0)
 			{
@@ -239,8 +241,10 @@ namespace core
 					continue;
 				EXCEPTION("Poll error: %s", std::strerror(errno));
 			}
+
 			if (eventCount > 0)
 				handlePollEvents(eventCount);
+
 			cleanUpTimeOutClients();
 		}
 	}
