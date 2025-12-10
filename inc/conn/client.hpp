@@ -30,5 +30,6 @@ namespace conn
 		inline ClientState &getState() { return _state; }
 
 		inline virtual bool shouldClose() const { return _state == CLOSING || _state == CLIENT_ERROR; };
+		virtual void handleEvents(const short events);
 	};
 } // namespace conn

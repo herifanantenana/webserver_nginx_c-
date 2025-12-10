@@ -27,6 +27,7 @@ namespace core
 		void setupServerSocket();
 		void synchronizePollFds();
 		void cleanUpTimeOutClients();
+		void handlePollEvents(int &eventCount);
 
 	public:
 		static Network *getInstance();

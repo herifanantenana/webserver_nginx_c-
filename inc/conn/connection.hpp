@@ -33,5 +33,6 @@ namespace conn
 		bool isTimeOuted(const int timeoutSeconds) const;
 
 		virtual bool shouldClose() const = 0;
+		virtual void handleEvents(const short events) = 0;
 	};
 } // namespace conn

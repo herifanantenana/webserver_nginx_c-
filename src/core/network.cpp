@@ -164,7 +164,7 @@ namespace core
 		}
 	}
 
-	void core::Network::cleanUpTimeOutClients()
+	void Network::cleanUpTimeOutClients()
 	{
 		std::vector<conn::Connection *> connectionsToClose;
 
@@ -188,6 +188,41 @@ namespace core
 		}
 	}
 
+	void Network::handlePollEvents(int &eventCount)
+	{
+		std::vector<conn::Connection *> connectionsToClose;
+		for (std::vector<pollfd>::iterator it = _pollFds.begin(); it != _pollFds.end() && eventCount > 0; ++it)
+		{
+			if (it->revents == 0)
+				continue;
+
+			--eventCount;
+
+			const int fd = it->fd;
+			conn::Connection *connection = _connections[fd];
+			if (!connection)
+				continue;
+
+			try
+			{
+				/* code */
+				if (connection->shouldClose())
+					connectionsToClose.push_back(connection);
+			}
+			catch (const std::exception &e)
+			{
+				// !fix:  prepare error response for client before closing
+				HANDLE_EXCEPTION(e);
+				connectionsToClose.push_back(connection);
+			}
+
+			// !fix: remove this code after implementing proper error response handling
+			for (std::vector<conn::Connection *>::iterator closeIt = connectionsToClose.begin(); closeIt != connectionsToClose.end(); ++closeIt)
+				unregisterConnection(*closeIt);
+			connectionsToClose.clear();
+		}
+	}
+
 	void Network::run()
 	{
 		LOG_INFO("Starting network event loop...");
@@ -204,6 +239,8 @@ namespace core
 					continue;
 				EXCEPTION("Poll error: %s", std::strerror(errno));
 			}
+			if (eventCount > 0)
+				handlePollEvents(eventCount);
 			cleanUpTimeOutClients();
 		}
 	}

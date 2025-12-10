@@ -20,5 +20,6 @@ namespace conn
 		virtual ~ServerSocket();
 
 		inline virtual bool shouldClose() const { return false; };
+		virtual void handleEvents(const short events);
 	};
 } // namespace conn

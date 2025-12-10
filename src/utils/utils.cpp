@@ -1,9 +1,11 @@
 #include "utils/utils.hpp"
 
+#include "utils/logger.hpp"
 #include <sstream>
 #include <sys/stat.h>
 #include <unistd.h>
-#include "utils/logger.hpp"
+#include <poll.h>
+#include <sstream>
 
 namespace utils
 {
@@ -99,5 +101,26 @@ namespace utils
 		if (!path1EndsWithSlash && !path2StartsWithSlash)
 			return path1 + "/" + path2;
 		return path1 + path2;
+	}
+
+	std::string getEventsName(const short events)
+	{
+		std::ostringstream oss;
+		if (events & POLLIN)
+			oss << "POLLIN ";
+		if (events & POLLPRI)
+			oss << "POLLPRI ";
+		if (events & POLLOUT)
+			oss << "POLLOUT ";
+		if (events & POLLERR)
+			oss << "POLLERR ";
+		if (events & POLLHUP)
+			oss << "POLLHUP ";
+		if (events & POLLNVAL)
+			oss << "POLLNVAL ";
+		std::string result = oss.str();
+		if (!result.empty() && result.at(result.length() - 1) == ' ')
+			result.erase(result.length() - 1);
+		return result;
 	}
 } // namespace utils
