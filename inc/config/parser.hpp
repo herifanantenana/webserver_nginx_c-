@@ -25,6 +25,6 @@ namespace config
 
 		void parseConfigFile();
 		void setup();
-		void printConfig() const;
+		void printConfig(const std::string &outputFilePath) const;
 	};
 } // namespace config

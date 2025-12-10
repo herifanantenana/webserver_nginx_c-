@@ -30,7 +30,8 @@ namespace config
 		inline void addLocation(const LocationConfig &location) { _locations.push_back(location); }
 
 		inline const std::vector<HostPort> &getHostPorts() const { return _hostPorts; }
+
 		void setup();
-		void printConfig() const;
+		void printConfig(std::ofstream &outFile) const;
 	};
 } // namespace config

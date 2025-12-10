@@ -39,6 +39,6 @@ namespace utils
 
 	void Exception::log() const
 	{
-		Logger::log(Logger::ERROR, _file.c_str(), _function.c_str(), _line, "%s", _message.c_str());
+		Logger::log(Logger::FATAL, _file.c_str(), _function.c_str(), _line, "%s", _message.c_str());
 	}
 } // namespace utils

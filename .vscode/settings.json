@@ -59,7 +59,7 @@
 		"mutex": "cpp",
 		"new": "cpp",
 		"numbers": "cpp",
-		"ostream": "cpp",
+		"ofstream": "cpp",
 		"semaphore": "cpp",
 		"sstream": "cpp",
 		"stdexcept": "cpp",

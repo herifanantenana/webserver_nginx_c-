@@ -206,14 +206,18 @@ namespace config
 			it->setup();
 	}
 
-	void ParserConfig::printConfig() const
+	void ParserConfig::printConfig(const std::string &outputFilePath) const
 	{
-		std::cout << "Parsed Configuration:" << std::endl;
+		std::ofstream outFile(outputFilePath.c_str());
+		if (!outFile.is_open())
+			EXCEPTION("Failed to open output file for writing parsed configuration.");
+		outFile << "Parsed Configuration:" << std::endl;
 		for (size_t i = 0; i < _servers.size(); ++i)
 		{
-			std::cout << "----------------------------------------" << std::endl;
-			std::cout << "Server " << i + 1 << ":" << std::endl;
-			_servers[i].printConfig();
+			outFile << "----------------------------------------" << std::endl;
+			outFile << "Server " << i + 1 << ":" << std::endl;
+			_servers[i].printConfig(outFile);
 		}
+		outFile.close();
 	}
 } // namespace config
