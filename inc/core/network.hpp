@@ -25,6 +25,8 @@ namespace core
 		void unregisterConnection(conn::Connection *connection);
 
 		void setupServerSocket();
+		void synchronizePollFds();
+		void cleanUpTimeOutClients();
 
 	public:
 		static Network *getInstance();

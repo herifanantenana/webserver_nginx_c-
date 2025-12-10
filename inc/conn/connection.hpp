@@ -27,7 +27,10 @@ namespace conn
 		inline void setFd(const int fd) { _fd = fd; }
 
 		inline const int &getFd() const { return _fd; }
+		inline const ConnectionType &getType() const { return _type; }
 		inline const short &getPollEvents() const { return _pollEvents; }
+
+		bool isTimeOuted(const int timeoutSeconds) const;
 
 		virtual bool shouldClose() const = 0;
 	};

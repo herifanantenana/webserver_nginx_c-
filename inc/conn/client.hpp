@@ -27,6 +27,8 @@ namespace conn
 		ClientSocket(const int fd, const config::ServerConfig &serverConfig);
 		virtual ~ClientSocket();
 
+		inline ClientState &getState() { return _state; }
+
 		inline virtual bool shouldClose() const { return _state == CLOSING || _state == CLIENT_ERROR; };
 	};
 } // namespace conn
