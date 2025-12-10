@@ -3,6 +3,8 @@
 #include "utils/exception.hpp"
 #include "utils/logger.hpp"
 #include "utils/utils.hpp"
+#include "core/network.hpp"
+#include "conn/client.hpp"
 #include <cstring>
 #include <cerrno>
 #include <arpa/inet.h>
@@ -46,22 +48,62 @@ namespace conn
 		LOG_INFO("Server listening on %s:%d", _host.c_str(), _port);
 	}
 
-	conn::ServerSocket::~ServerSocket()
+	ServerSocket::~ServerSocket()
 	{
+	}
+
+	int ServerSocket::acceptNewClient()
+	{
+		sockaddr_in clientAddr;
+		socklen_t clientAddrLen = sizeof(clientAddr);
+
+		const int clientFd = accept(getFd(), reinterpret_cast<sockaddr *>(&clientAddr), &clientAddrLen);
+		if (clientFd < 0)
+		{
+			if (errno != EWOULDBLOCK && errno != EAGAIN)
+				EXCEPTION("Failed to accept new client: %s", std::strerror(errno));
+			else
+				LOG_WARNING("No pending connections to accept");
+			return -1;
+		}
+
+		char clientIp[INET_ADDRSTRLEN];
+		inet_ntop(AF_INET, &clientAddr.sin_addr, clientIp, sizeof(clientIp));
+		LOG_INFO("Accepted new client connection from %s:%d, fd: %d", clientIp, ntohs(clientAddr.sin_port), clientFd);
+
+		return clientFd;
+	}
+
+	void ServerSocket::handlePollIn()
+	{
+		const int clientFd = acceptNewClient();
+		if (clientFd < 0)
+			EXCEPTION("Failed to accept new client connection on server socket fd: %d", getFd());
+
+		core::Network::getInstance()->registerConnection(new ClientSocket(clientFd, _serverConfig));
+	}
+
+	void ServerSocket::handlePollOut()
+	{
+		LOG_DEBUG("ServerSocket fd: %d handlePollOut called", getFd());
+	}
+
+	void ServerSocket::handlePollErr()
+	{
+		LOG_DEBUG("ServerSocket fd: %d handlePollErr called", getFd());
 	}
 
 	void ServerSocket::handleEvents(const short events)
 	{
-		LOG_DEBUG("ServerSocket fd: %d handleEvents called with events: %s", getFd(), utils::getEventNames(events).c_str());
+		// LOG_DEBUG("ServerSocket fd: %d handleEvents called with events: %s", getFd(), utils::getEventNames(events).c_str());
 		if (events & POLLIN)
-		{
-		}
+			handlePollIn();
 		if (events & POLLOUT)
-		{
-		}
+			handlePollOut();
 		if (events & (POLLERR | POLLHUP | POLLNVAL))
 		{
 			LOG_WARNING("ServerSocket fd: %d received hang up or error event", getFd());
+			handlePollErr();
 		}
 	}
 } // namespace conn

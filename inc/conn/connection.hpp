@@ -21,8 +21,14 @@ namespace conn
 		short _pollEvents;
 		time_t _lastActivity;
 
-	public:
+	protected:
 		Connection(const int fd, const ConnectionType type);
+
+		virtual void handlePollIn() = 0;
+		virtual void handlePollOut() = 0;
+		virtual void handlePollErr() = 0;
+
+	public:
 		virtual ~Connection();
 
 		inline void setPollEvents(const short events) { _pollEvents = events; }

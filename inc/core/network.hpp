@@ -21,9 +21,6 @@ namespace core
 		Network();
 		~Network();
 
-		void registerConnection(conn::Connection *connection);
-		void unregisterConnection(conn::Connection *connection);
-
 		void setupServerSocket();
 		void synchronizePollFds();
 		void cleanUpTimeOutClients();
@@ -35,5 +32,8 @@ namespace core
 
 		void init(std::vector<config::ServerConfig> serverConfigs);
 		void run();
+
+		void registerConnection(conn::Connection *connection);
+		void unregisterConnection(conn::Connection *connection);
 	};
 } // namespace core

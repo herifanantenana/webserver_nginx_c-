@@ -23,6 +23,10 @@ namespace conn
 		const config::ServerConfig &_serverConfig;
 		ClientState _state;
 
+		virtual void handlePollIn();
+		virtual void handlePollOut();
+		virtual void handlePollErr();
+
 	public:
 		ClientSocket(const int fd, const config::ServerConfig &serverConfig);
 		virtual ~ClientSocket();

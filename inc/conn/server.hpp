@@ -15,6 +15,12 @@ namespace conn
 		const config::ServerConfig &_serverConfig;
 		sockaddr_in _address;
 
+		int acceptNewClient();
+
+		virtual void handlePollIn();
+		virtual void handlePollOut();
+		virtual void handlePollErr();
+
 	public:
 		ServerSocket(const int port, const std::string &host, const config::ServerConfig &serverConfig);
 		virtual ~ServerSocket();

@@ -143,7 +143,7 @@ namespace core
 			if (connIt == _connections.end())
 			{
 				LOG_WARNING("Pollfd with fd %d has no associated connection. Skipping.", fd);
-				connectionsToClose.push_back(connIt->second);
+
 				continue;
 			}
 
@@ -205,9 +205,10 @@ namespace core
 			--eventCount;
 
 			const int fd = it->fd;
-			conn::Connection *connection = _connections[fd];
-			if (!connection)
+			std::map<const int, conn::Connection *>::iterator connIt = _connections.find(fd);
+			if (connIt == _connections.end() || !connIt->second)
 				continue;
+			conn::Connection *connection = connIt->second;
 
 			try
 			{
@@ -221,12 +222,12 @@ namespace core
 				HANDLE_EXCEPTION(e);
 				connectionsToClose.push_back(connection);
 			}
-
-			// !fix: remove this code after implementing proper error response handling
-			for (std::vector<conn::Connection *>::iterator closeIt = connectionsToClose.begin(); closeIt != connectionsToClose.end(); ++closeIt)
-				unregisterConnection(*closeIt);
-			connectionsToClose.clear();
 		}
+
+		// After processing all events, unregister connections that should be closed
+		for (std::vector<conn::Connection *>::iterator closeIt = connectionsToClose.begin(); closeIt != connectionsToClose.end(); ++closeIt)
+			unregisterConnection(*closeIt);
+		connectionsToClose.clear();
 	}
 
 	void Network::run()
