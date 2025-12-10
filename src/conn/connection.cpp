@@ -17,4 +17,13 @@ namespace conn
 				LOG_WARNING("Failed to close file descriptor: %d", _fd);
 		}
 	}
+
+	bool Connection::isTimedOut(const int timeoutSeconds) const
+	{
+		if (_lastActivity == 0)
+			return false;
+
+		time_t currentTime = std::time(NULL);
+		return (std::difftime(currentTime, _lastActivity) >= timeoutSeconds);
+	}
 } // namespace conn

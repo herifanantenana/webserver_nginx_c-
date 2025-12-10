@@ -2,6 +2,7 @@
 
 #include "utils/exception.hpp"
 #include "utils/logger.hpp"
+#include "utils/utils.hpp"
 #include <cstring>
 #include <cerrno>
 #include <arpa/inet.h>
@@ -47,5 +48,20 @@ namespace conn
 
 	conn::ServerSocket::~ServerSocket()
 	{
+	}
+
+	void ServerSocket::handleEvents(const short events)
+	{
+		LOG_DEBUG("ServerSocket fd: %d handleEvents called with events: %s", getFd(), utils::getEventNames(events).c_str());
+		if (events & POLLIN)
+		{
+		}
+		if (events & POLLOUT)
+		{
+		}
+		if (events & (POLLERR | POLLHUP | POLLNVAL))
+		{
+			LOG_WARNING("ServerSocket fd: %d received hang up or error event", getFd());
+		}
 	}
 } // namespace conn

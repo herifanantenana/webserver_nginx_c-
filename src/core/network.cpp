@@ -3,7 +3,10 @@
 #include "utils/logger.hpp"
 #include "utils/exception.hpp"
 #include "conn/server.hpp"
+#include "conn/client.hpp"
+#include "conn/connection.hpp"
 #include <csignal>
+#include <cstring>
 
 namespace core
 {
@@ -130,10 +133,124 @@ namespace core
 		_serverConfigs = serverConfigs;
 	}
 
+	void Network::synchronizePollFds()
+	{
+		std::vector<conn::Connection *> connectionsToClose;
+		for (std::vector<pollfd>::iterator it = _pollFds.begin(); it != _pollFds.end(); ++it)
+		{
+			const int fd = it->fd;
+			std::map<const int, conn::Connection *>::iterator connIt = _connections.find(fd);
+			if (connIt == _connections.end())
+			{
+				LOG_WARNING("Pollfd with fd %d has no associated connection. Skipping.", fd);
+				connectionsToClose.push_back(connIt->second);
+				continue;
+			}
+
+			short events = POLLIN | POLLHUP | POLLERR;
+			if (connIt->second->getType() == conn::Connection::CLIENT_SOCKET)
+			{
+				conn::ClientSocket *clientSocket = dynamic_cast<conn::ClientSocket *>(connIt->second);
+				if (clientSocket)
+				{
+					conn::ClientSocket::ClientState clientState = clientSocket->getState();
+					if (clientState == conn::ClientSocket::PROCESSING_REQUEST || clientState == conn::ClientSocket::EXECUTING_CGI || clientState == conn::ClientSocket::WRITING_RESPONSE)
+						events |= POLLOUT;
+					connIt->second->setPollEvents(events);
+				}
+				else
+					LOG_WARNING("Pollfd with fd %d is not associated with a ClientSocket. Skipping.", fd);
+			}
+
+			it->events = connIt->second->getPollEvents();
+		}
+
+		for (std::vector<conn::Connection *>::iterator it = connectionsToClose.begin(); it != connectionsToClose.end(); ++it)
+			unregisterConnection(*it);
+	}
+
+	void Network::cleanUpTimeOutClients()
+	{
+		std::vector<conn::Connection *> connectionsToClose;
+
+		for (std::map<const int, conn::Connection *>::iterator it = _connections.begin(); it != _connections.end(); ++it)
+		{
+			conn::Connection *connection = it->second;
+			if (connection->getType() == conn::Connection::SERVER_SOCKET)
+				continue;
+
+			// !fix: check for timeout prepare response for timed out clients
+			if (connection->isTimedOut(TIMEOUT_CHECK_INTERVAL))
+				connectionsToClose.push_back(connection);
+		}
+
+		// !fix: remove this code after implementing proper timeout response handling
+		for (std::vector<conn::Connection *>::iterator it = connectionsToClose.begin(); it != connectionsToClose.end(); ++it)
+		{
+			conn::Connection *connection = *it;
+			LOG_WARNING("Closing timed out client connection with fd %d.", connection->getFd());
+			unregisterConnection(connection);
+		}
+	}
+
+	void Network::handlePollEvents(int &eventCount)
+	{
+		std::vector<conn::Connection *> connectionsToClose;
+		for (std::vector<pollfd>::iterator it = _pollFds.begin(); it != _pollFds.end() && eventCount > 0; ++it)
+		{
+			const short revents = it->revents;
+			if (revents == 0)
+				continue;
+
+			--eventCount;
+
+			const int fd = it->fd;
+			conn::Connection *connection = _connections[fd];
+			if (!connection)
+				continue;
+
+			try
+			{
+				connection->handleEvents(revents);
+				if (connection->shouldClose())
+					connectionsToClose.push_back(connection);
+			}
+			catch (const std::exception &e)
+			{
+				// !fix:  prepare error response for client before closing
+				HANDLE_EXCEPTION(e);
+				connectionsToClose.push_back(connection);
+			}
+
+			// !fix: remove this code after implementing proper error response handling
+			for (std::vector<conn::Connection *>::iterator closeIt = connectionsToClose.begin(); closeIt != connectionsToClose.end(); ++closeIt)
+				unregisterConnection(*closeIt);
+			connectionsToClose.clear();
+		}
+	}
+
 	void Network::run()
 	{
 		LOG_INFO("Starting network event loop...");
 		setupServerSocket();
 		_isRunning = true;
+
+		while (_isRunning)
+		{
+			synchronizePollFds();
+
+			int eventCount = poll(&_pollFds[0], _pollFds.size(), 1000);
+			if (eventCount < 0)
+			{
+				if (errno == EINTR)
+					continue;
+				EXCEPTION("Poll error: %s", std::strerror(errno));
+			}
+
+			if (eventCount > 0)
+				handlePollEvents(eventCount);
+
+			cleanUpTimeOutClients();
+		}
 	}
 } // namespace core
