@@ -34,32 +34,31 @@ namespace config
 			EXCEPTION("Invalid redirect status code %d for location: %s", _redirect.first, _aliasPath.c_str());
 	}
 
-	void config::LocationConfig::printConfig() const
+	void config::LocationConfig::printConfig(std::ofstream &outFile) const
 	{
-		std::cout << "Location Config:" << std::endl;
-		std::cout << "\tAlias Path: " << _aliasPath << std::endl;
-		std::cout << "\tRoot Path: " << _rootPath << std::endl;
-		std::cout << "\tAuto Index: " << (_autoIndex ? "Enabled" : "Disabled") << std::endl;
+		outFile << "\t\tLocation Config:" << std::endl;
+		outFile << "\t\t\tAlias Path: " << _aliasPath << std::endl;
+		outFile << "\t\t\tRoot Path: " << _rootPath << std::endl;
+		outFile << "\t\t\tAuto Index: " << (_autoIndex ? "Enabled" : "Disabled") << std::endl;
 
-		std::cout << "\tIndex Files:" << std::endl;
+		outFile << "\t\t\tIndex Files:" << std::endl;
 		for (std::vector<std::string>::const_iterator it = _indexFiles.begin(); it != _indexFiles.end(); ++it)
-			std::cout << "\t\t- " << *it << std::endl;
-
-		std::cout << "\tAllowed Methods:" << std::endl;
+			outFile << "\t\t\t\t- " << *it << std::endl;
+		outFile << "\t\t\tAllowed Methods:" << std::endl;
 		for (std::vector<std::string>::const_iterator it = _allowedMethods.begin(); it != _allowedMethods.end(); ++it)
-			std::cout << "\t\t- " << *it << std::endl;
+			outFile << "\t\t\t\t- " << *it << std::endl;
 
-		std::cout << "\tCGI Mappings:" << std::endl;
+		outFile << "\t\t\tCGI Mappings:" << std::endl;
 		for (std::vector<CgiMapping>::const_iterator it = _cgiMappings.begin(); it != _cgiMappings.end(); ++it)
-			std::cout << "\t\t- Extension: " << it->first << ", Script: " << it->second << std::endl;
+			outFile << "\t\t\t\t- Extension: " << it->first << ", Script: " << it->second << std::endl;
 
-		std::cout << "\tUpload Paths:" << std::endl;
+		outFile << "\t\t\tUpload Paths:" << std::endl;
 		for (std::vector<std::string>::const_iterator it = _uploadPaths.begin(); it != _uploadPaths.end(); ++it)
-			std::cout << "\t\t- " << *it << std::endl;
+			outFile << "\t\t\t\t- " << *it << std::endl;
 
 		if (!_redirect.second.empty())
-			std::cout << "\tRedirect: " << _redirect.first << " -> " << _redirect.second << std::endl;
+			outFile << "\t\t\tRedirect: " << _redirect.first << " -> " << _redirect.second << std::endl;
 		else
-			std::cout << "\tRedirect: None" << std::endl;
+			outFile << "\t\t\tRedirect: None" << std::endl;
 	}
 } // namespace config

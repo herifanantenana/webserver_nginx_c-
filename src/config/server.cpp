@@ -42,24 +42,23 @@ namespace config
 			it->setup(_rootPath);
 	}
 
-	void config::ServerConfig::printConfig() const
+	void config::ServerConfig::printConfig(std::ofstream &outFile) const
 	{
-		std::cout << "Server Config:" << std::endl;
+		outFile << "Server Config:" << std::endl;
 
-		std::cout << "\tHost and Ports:" << std::endl;
+		outFile << "\tHost and Ports:" << std::endl;
 		for (std::vector<HostPort>::const_iterator it = _hostPorts.begin(); it != _hostPorts.end(); ++it)
-			std::cout << "\t\t- " << it->first << ":" << it->second << std::endl;
+			outFile << "\t\t- " << it->first << ":" << it->second << std::endl;
 
-		std::cout << "\tRoot Path: " << _rootPath << std::endl;
-
-		std::cout << "\tError Pages:" << std::endl;
+		outFile << "\tRoot Path: " << _rootPath << std::endl;
+		outFile << "\tError Pages:" << std::endl;
 		for (std::map<int, std::string>::const_iterator it = _errorPages.begin(); it != _errorPages.end(); ++it)
-			std::cout << "\t\t- " << it->first << ": " << it->second << std::endl;
+			outFile << "\t\t- " << it->first << ": " << it->second << std::endl;
 
-		std::cout << "\tClient Max Body Size: " << _clientMaxBodySize << std::endl;
+		outFile << "\tClient Max Body Size: " << _clientMaxBodySize << std::endl;
 
-		std::cout << "\tLocations:" << std::endl;
+		outFile << "\tLocations:" << std::endl;
 		for (std::vector<LocationConfig>::const_iterator it = _locations.begin(); it != _locations.end(); ++it)
-			it->printConfig();
+			it->printConfig(outFile);
 	}
 } // namespace config

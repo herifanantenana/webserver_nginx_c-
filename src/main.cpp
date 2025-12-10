@@ -12,7 +12,7 @@ int main(int argc, char const *argv[])
 		config::ParserConfig parserConfig(argv[1]);
 		parserConfig.parseConfigFile();
 		parserConfig.setup();
-		parserConfig.printConfig();
+		parserConfig.printConfig(std::string(argv[1]) + ".out");
 	}
 	catch (const std::exception &e)
 	{
