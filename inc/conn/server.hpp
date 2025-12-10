@@ -1,9 +1,9 @@
 #pragma once
 
-#include <string>
-#include <netinet/in.h>
 #include "config/server.hpp"
 #include "conn/connection.hpp"
+#include <string>
+#include <netinet/in.h>
 
 namespace conn
 {
@@ -19,6 +19,6 @@ namespace conn
 		ServerSocket(const int port, const std::string &host, const config::ServerConfig &serverConfig);
 		virtual ~ServerSocket();
 
-		virtual bool shouldClose() const;
+		inline virtual bool shouldClose() const { return false; };
 	};
 } // namespace conn

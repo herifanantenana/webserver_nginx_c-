@@ -44,4 +44,8 @@ namespace conn
 
 		LOG_FATAL("Server listening on %s:%d", _host, _port);
 	}
+
+	conn::ServerSocket::~ServerSocket()
+	{
+	}
 } // namespace conn
