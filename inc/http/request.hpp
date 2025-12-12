@@ -9,6 +9,13 @@ namespace http
 	class Request
 	{
 	public:
+		enum Method
+		{
+			METHOD_GET,
+			METHOD_POST,
+			METHOD_DELETE,
+			METHOD_UNKNOWN
+		};
 		enum ParseState
 		{
 			PARSE_REQUEST_LINE,
@@ -39,8 +46,14 @@ namespace http
 		// body
 		std::vector<char> _body;
 		std::string _buffer;
+		size_t _contentLength;
+		bool _isChunked;
 
+		Method
+		parseMethod(const std::string &methodStr);
+		const std::string getHeader(const std::string &key) const;
 		ParseState parseRequestLine(const std::string &line);
+		ParseState parseHeadersLine(const std::string &line);
 
 	public:
 		Request();
