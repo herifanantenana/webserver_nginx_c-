@@ -24,6 +24,8 @@ namespace conn
 	protected:
 		Connection(const int fd, const ConnectionType type);
 
+		inline void updateLastActivity() { _lastActivity = std::time(NULL); }
+
 		virtual void handlePollIn() = 0;
 		virtual void handlePollOut() = 0;
 		virtual void handlePollErr() = 0;
